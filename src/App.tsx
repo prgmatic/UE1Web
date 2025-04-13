@@ -106,9 +106,8 @@ function App() {
         <div className="flex-1 min-h-0 overflow-auto p-4">
           <MemoryViewer
             className="w-full"
-            readMemory={(addr) => emulator.computer.memory.read(addr)}
-            startAddress={0x000}
-            endAddress={0x0FFF}
+            readMemory={(addr) => emulator.computer.memory.randomAccess.readOutput(addr)}
+            endAddress={emulator.computer.memory.randomAccess.size - 1}
           />
         </div>
       </div>

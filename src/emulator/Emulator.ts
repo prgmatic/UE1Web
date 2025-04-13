@@ -1,7 +1,7 @@
 import { AddressSpan } from "../assembler/AssemblyParser";
 import { CustomAsm } from "../assembler/CustomAsm";
 import { Stepper } from "./Stepper";
-import { UE2 } from "./ue2";
+import { UE1 } from "./UE1";
 import { Range } from "monaco-editor";
 
 export class Emulator {
@@ -19,7 +19,7 @@ export class Emulator {
     public get tickCount() { return this.stepper.tickCount; }
     public get error() { return this._error; }
 
-    private _computer: UE2 = new UE2();
+    private _computer: UE1 = new UE1();
     private stepper: Stepper;
     private assembler: CustomAsm = new CustomAsm();
     private addressSpans: { [key: number]: AddressSpan } = [];
@@ -80,20 +80,28 @@ export class Emulator {
     private onStepped(): boolean {
         this._computer.step();
 
-        const span = this.addressSpans[this._computer.registers.programCounter.value];
-        if (span && this.breakpoints.has(span.lineStart)) {
+        if (this.didHitBreakpoint() || this.shouldHalt()) {
             this.stepper.pause();
             return false; // pause execution
         }
         return true; // continue execution
     }
 
+
+    private didHitBreakpoint(): boolean {
+        const span = this.addressSpans[this._computer.registers.programCounter.value];
+        return span && this.breakpoints.has(span.lineStart)
+    }
+
+    private shouldHalt(): boolean {
+        return this.computer.registers.fFlag.value > 0;
+    }
     
 
     private assemble(): boolean {
         if (this._code == null)
             return false;
-        const result = this.assembler.assemble(this._code, this.computer.memory, this.addressSpans);
+        const result = this.assembler.assemble(this._code, this.computer.memory.program, this.addressSpans);
         this._isAssembled = result.success;
         this._error = result.error;
 

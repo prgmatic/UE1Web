@@ -51,8 +51,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 tokenizer: {
                     root: [
                         [/;.*$/, 'comment'],
-                        [/\b(BZD|BLD|LDA|LDM|ADC|ADD|AND|NOR|MOV|MOT|MIN)\b/i, 'keyword'],
-                        [/\b(ACR|HCR|BFR|MAR|PCR)\b/i, 'register'],
+                        [/\b(NOPO|LD|ADD|SUB|ONE|NAND|OR|XOR|STO|STOC|IEN|OEN|IOC|RTN|SKZ|NOPF)\b/i, 'keyword'],
+                        [/\b(SR[0-7]|OR[0-7]|IR[1-9]|RR)\b/i, 'register'],
                         [/[A-Za-z0-9_]*:/, 'label'],
                         [/\bR[0-9]+\b/, 'variable'],
                         [/\b0x[0-9a-fA-F]+\b/, 'number.hex'],

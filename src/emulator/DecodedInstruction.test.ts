@@ -28,24 +28,6 @@ describe('DecodedInstruction', () => {
     expect(instruction.argument).toBe(argument & ARG_MASK);
   });
 
-  it('extracts memoryMode from argument (bits 0-1)', () => {
-    const argument = 0b000000011; // memoryMode = 0b11 = 3
-    const instruction = DecodedInstruction.create(0, argument);
-    expect(instruction.memoryMode).toBe(0b11);
-  });
-
-  it('extracts registerDestination from argument (bits 3-5)', () => {
-    const argument = 0b00111000; // registerDestination = 0b111 = 7
-    const instruction = DecodedInstruction.create(0, argument);
-    expect(instruction.registerDestination).toBe(0b111);
-  });
-
-  it('extracts registerSource from argument (bits 6-8)', () => {
-    const argument = 0b111000000; // registerSource = 0b111 = 7
-    const instruction = DecodedInstruction.create(0, argument);
-    expect(instruction.registerSource).toBe(0b111);
-  });
-
   it('masks instruction to WORD_MASK in constructor', () => {
     const overflow = (1 << WORD_WIDTH) | 0b101010101010101;
     const decoded = new DecodedInstruction(overflow);

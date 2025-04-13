@@ -1,42 +1,55 @@
-import { Register, RegisterRwMode } from "./Register";
+import { Register } from "./Register";
 
 export class Registers {
-    accumulator   : Register = new Register(15, RegisterRwMode.ReadAndWrite, "ACR");
-    holdingCell   : Register = new Register(15, RegisterRwMode.ReadAndWrite, "HCR");
-    buffer        : Register = new Register(15, RegisterRwMode.ReadAndWrite, "BFR");
-    memoryAddress : Register = new Register(12, RegisterRwMode.WriteOnly,    "MAR");
-    programCounter: Register = new Register(12, RegisterRwMode.WriteOnly,    "PCR");
-    zeroFlag      : Register = new Register( 1, RegisterRwMode.None,         "ZFlag");
-    carryFlag     : Register = new Register( 1, RegisterRwMode.None,         "LFlag");
+    result              : Register = new Register(1,  "RR");
+    carry               : Register = new Register(1,  "CR");
+    inputEnable         : Register = new Register(1,  "IE");
+    outputEnable        : Register = new Register(1,  "OE");
+    ioControlFlag       : Register = new Register(1,  "IOC");
+    returnFlag          : Register = new Register(1,  "RTN");
+    conditionalSkipFlag : Register = new Register(1,  "SKZ");
+    oFlag               : Register = new Register(1,  "FLGO");
+    fFlag               : Register = new Register(1,  "FLGF");
+    programCounter      : Register = new Register(16, "PC");
+
 
     public latch(): void {
-        this.accumulator.latch();
-        this.holdingCell.latch();
-        this.buffer.latch();
-        this.memoryAddress.latch();
+        this.result.latch();
+        this.carry.latch();
+        this.inputEnable.latch();
+        this.outputEnable.latch();
+        this.ioControlFlag.latch();
+        this.returnFlag.latch();
+        this.conditionalSkipFlag.latch();
+        this.oFlag.latch();
+        this.fFlag.latch();
         this.programCounter.latch();
-        this.zeroFlag.latch();
-        this.carryFlag.latch();
     }
 
     public latchAllButProgramCounter(): void {
-        this.accumulator.latch();
-        this.holdingCell.latch();
-        this.buffer.latch();
-        this.memoryAddress.latch();
-        this.zeroFlag.latch();
-        this.carryFlag.latch();
+        this.result.latch();
+        this.carry.latch();
+        this.inputEnable.latch();
+        this.outputEnable.latch();
+        this.ioControlFlag.latch();
+        this.returnFlag.latch();
+        this.conditionalSkipFlag.latch();
+        this.oFlag.latch();
+        this.fFlag.latch();
+        this.outputEnable.latch();
     }
 
     public reset(): void {
-        this.accumulator.value = 0;
-        this.holdingCell.value = 0;
-        this.buffer.value = 0;
-        this.memoryAddress.value = 0;
-        this.programCounter.value = 0;
-        this.zeroFlag.value = 0;
-        this.carryFlag.value = 0;
-
+        this.result.setAndLatch(0);
+        this.inputEnable.setAndLatch(0);
+        this.outputEnable.setAndLatch(0);
+        this.carry.setAndLatch(0);
+        this.ioControlFlag.setAndLatch(0);
+        this.returnFlag.setAndLatch(0);
+        this.conditionalSkipFlag.setAndLatch(0);
+        this.oFlag.setAndLatch(0);
+        this.fFlag.setAndLatch(0);
+        this.programCounter.setAndLatch(0);
         this.latch();
     }
 }
