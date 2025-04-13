@@ -43,7 +43,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         lineHighlight.current = editor.createDecorationsCollection();
         breakpointGlyphs.current = editor.createDecorationsCollection();
 
-        const languageId = 'ue2asm';
+        const languageId = 'ue1asm';
         if (!monaco.languages.getLanguages().some(lang => lang.id === languageId)) {
             monaco.languages.register({ id: languageId });
 
@@ -61,7 +61,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 },
             });
 
-            monaco.editor.defineTheme('ue2-dark', {
+            monaco.editor.defineTheme('ue1-dark', {
                 base: 'vs-dark',
                 inherit: true,
                 rules: [
@@ -75,7 +75,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 colors: {},
             });
 
-            monaco.editor.setTheme('ue2-dark');
+            monaco.editor.setTheme('ue1-dark');
         }
 
         editor.onMouseDown((e) =>{
@@ -92,7 +92,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     return (
         <div className={className}>
             <Editor
-                language="ue2asm" // you can change this to 'plaintext' or customize it later
+                language="ue1asm"
                 value={code}
                 onChange={(value) => onChange(value || '')}
                 onMount={handleEditorMount}

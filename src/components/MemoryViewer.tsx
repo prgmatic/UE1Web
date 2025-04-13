@@ -61,7 +61,6 @@ const MemoryViewer: React.FC<MemoryViewerProps> = ({
       <div className="text-lg uppercase font-mono font-bold pb-4">Output</div>
       {toggleRow()}
       <div className="text-lg uppercase font-mono font-bold">Input</div>
-
     </div>
   );
 };

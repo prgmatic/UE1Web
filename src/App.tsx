@@ -10,14 +10,12 @@ import { throttle } from 'lodash';
 import MemoryViewer from './components/MemoryViewer';
 import AssembleErrorOutput from './components/AssembleErrorOutput';
 import EditorToolbar from './components/EditorToolbar';
-import summationExample from './examples/Summation.txt?raw'
-import primesExample from './examples/Primes.txt?raw'
+import testExample from './examples/MemoryTest.txt?raw';
 import GitHubLogo from './assets/github-mark-white.svg';
 
 const emulator = new Emulator();
 const examplePrograms: { label: string; code: string }[] = [
-  { label: "Example: Summation", code: summationExample },
-  { label: "Example: Primes", code: primesExample }
+  { label: "Example: Memory Test", code: testExample },
 ];
 
 function App() {
@@ -27,14 +25,14 @@ function App() {
 
   const [code, setCode] = useState<string>(() => {
     // Load initial value from localStorage or use default
-    return localStorage.getItem('ue2-editor-code') || summationExample;
+    return localStorage.getItem('ue1-editor-code') || testExample;
   });
 
   const breakpointGlyphs = useRef<editor.IEditorDecorationsCollection>(null);
 
   // Save to localStorage on change
   useEffect(() => {
-    localStorage.setItem('ue2-editor-code', code);
+    localStorage.setItem('ue1-editor-code', code);
     emulator.code = code;
     setHighlightRange(undefined);
   }, [code]);
@@ -95,7 +93,7 @@ function App() {
       <div className="w-86 flex flex-col h-full min-h-0 overflow-hidden">
         {/* Controls + Registers: fixed height content */}
         <div className="p-4 flex-shrink-0 w-full">
-          <a href="https://github.com/prgmatic/UE2Web" className='absolute top-3.5 left-6' target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/prgmatic/UE1Web" className='absolute top-3.5 left-6' target="_blank" rel="noopener noreferrer">
             <img src={GitHubLogo} alt="GitHub" className="w-10 h-10" />
           </a>
           <StepperControls emulator={emulator} />
