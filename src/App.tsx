@@ -103,11 +103,12 @@ function App() {
         </div>
 
         {/* Memory viewer: fills remaining space and scrolls */}
-        <div className="flex-1 min-h-0 overflow-auto p-4">
+        <div className="flex-1 min-h-0 overflow-auto">
           <MemoryViewer
             className="w-full"
+            resultRegister={emulator.computer.registers.result}
+            setToggle={(index, value) => emulator.computer.memory.randomAccess.setToggle(index, value)}
             readMemory={(addr) => emulator.computer.memory.randomAccess.readOutput(addr)}
-            endAddress={emulator.computer.memory.randomAccess.size - 1}
           />
         </div>
       </div>

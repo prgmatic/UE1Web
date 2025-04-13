@@ -1,67 +1,67 @@
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import { Register } from "../emulator/Register";
+import BitDisplay from "./BitDisplay";
+import ToggleSwitch from "./ToggleSwitch";
 
 interface MemoryViewerProps {
   readMemory: (addr: number) => number;
+  setToggle: (index: number, value: boolean) => void;
+  resultRegister: Register;
   className?: string;
-  startAddress?: number;
-  endAddress?: number;
-  valuesPerRow?: number;
-  rowHeight?: number;
 }
 
 const MemoryViewer: React.FC<MemoryViewerProps> = ({
   readMemory,
+  setToggle,
+  resultRegister,
   className = "",
-  startAddress = 0x0000,
-  endAddress = 0x0FFF,
-  valuesPerRow = 8,
-  rowHeight = 24,
 }) => {
-  const totalRows = Math.ceil((endAddress - startAddress + 1) / valuesPerRow);
 
-  const Row = ({ index, style }: ListChildComponentProps) => {
-    const rowStartAddr = startAddress + index * valuesPerRow;
-    const cells = [];
+  const displayRow = function (offset: number, size: number) {
+    const displays = [];
 
-    for (let offset = 0; offset < valuesPerRow; offset++) {
-      const addr = rowStartAddr + offset;
-      if (addr > endAddress) break;
-      const value = readMemory(addr);
-      cells.push(
-        <td key={offset} className="flex-1 px-2 font-mono text-sm text-right">
-          {value.toString()}
-        </td>
+    for (let i = offset; i < offset + size; i++) {
+      displays.push(
+        <BitDisplay getBitValue={() => readMemory(i) > 0} />
       );
     }
 
     return (
-      <tr style={style}>
-        <td className="pr-2 text-sm text-gray-500 font-mono">
-          {rowStartAddr.toString(16).padStart(4, '0').toUpperCase()}:
-        </td>
-        {cells}
-      </tr>
+      <div className="flex w-full flex-row justify-center gap-3">
+        {displays}
+      </div>
     );
-  };
+  }
+
+  const toggleRow = function() {
+    const toggles = [];
+
+    for (let i = 0; i < 7; i++) {
+      toggles.push(
+        <ToggleSwitch onChange={(enabled) => setToggle(i, enabled)} />
+      );
+    }
+
+    return (
+      <div className="flex w-full flex-row justify-center gap-3">
+        <div className="flex flex-col">
+          <BitDisplay getBitValue={() => resultRegister.value > 0} />
+          <div className="font-bold font-mono">RR</div>
+        </div>
+        {toggles}
+      </div>
+    );
+  }
 
   return (
-    // <div className={`${className ?? ""} table border rounded p-2`}>
-    // <table className="text-xs w-full">
-    //   <tbody className='w-full'>{rows}</tbody>
 
-    <div className={`${className ?? ""} table border rounded p-2`}>
-      <table className="text-xs w-full border-separate border-spacing-0">
-        <tbody>
-          <List
-            height={400} // You can make this a prop too
-            itemCount={totalRows}
-            itemSize={rowHeight}
-            width="100%"
-          >
-            {Row}
-          </List>
-        </tbody>
-      </table>
+    <div className={`${className}`}>
+      {displayRow(0, 8)}
+      <div className="text-lg uppercase font-mono font-bold pb-4">Scratch</div>
+      {displayRow(8, 8)}
+      <div className="text-lg uppercase font-mono font-bold pb-4">Output</div>
+      {toggleRow()}
+      <div className="text-lg uppercase font-mono font-bold">Input</div>
+
     </div>
   );
 };

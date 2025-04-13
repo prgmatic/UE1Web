@@ -4,9 +4,10 @@ import { PendingWrite } from "./BasicMemory";
 
 export class UE1Ram implements MemoryInterface {
     private static _size: number = 16;
-    private static _readSize: number = 8;
+    private static _scratchSize: number = 8;
     
-    private data:Uint16Array = new Uint16Array(UE1Ram._size);
+    private data:Uint8Array = new Uint8Array(UE1Ram._size);
+    private toggles:Uint8Array = new Uint8Array(UE1Ram._scratchSize - 1);
     private pendingWrites: PendingWrite[] = [];
 
     get size(): number {
@@ -23,10 +24,10 @@ export class UE1Ram implements MemoryInterface {
     read(address: number): number {
         if(address < 0 || address >= this.data.length)
             return 0;
-        if(address >= UE1Ram._readSize){
+        if(address >= UE1Ram._scratchSize){
             if(address == 8)
                 return this._resultRegister.value;
-            return 0; // TODO: other inputs.
+            return this.toggles[address - 9];
         }
         return this.data[address];
     }
@@ -48,6 +49,10 @@ export class UE1Ram implements MemoryInterface {
             return;
         this.data[address] = value;
     }
+
+    setToggle(index: number, value: boolean): void {
+        this.toggles[index] = value ? 1 : 0;
+    }
     
     latch(): void {
         for(const pendingWrite of this.pendingWrites)
@@ -58,6 +63,9 @@ export class UE1Ram implements MemoryInterface {
     clear(): void {
         for (let i = 0; i < this.data.length; i++) {
             this.data[i] = 0;
+        }
+        for (let i = 0; i < this.toggles.length; i++) {
+            this.toggles[i] = 0;
         }
         this.pendingWrites.length = 0; 
     }

@@ -111,8 +111,6 @@ export class CustomAsm {
             code = code.replace(regex, '');
             return { success: true, modifiedCode: code, address: address };
         } 
-        console.log("fail");
-        
         return { success: false };
     }
 

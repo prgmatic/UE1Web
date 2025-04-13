@@ -21,13 +21,10 @@ export class UE1 {
         }
         
         this.registers.programCounter.value += 1;
-                
     }
 
     public executeInstruction(instruction: number) {
         const decodedInstruction = new DecodedInstruction(instruction);
-
-        
         const dataIn = this.memory.randomAccess.read(decodedInstruction.argument);
 
         ArithmeticLogicUnit.executeInstruction(decodedInstruction, this.registers, dataIn);

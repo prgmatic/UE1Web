@@ -1,3 +1,0 @@
-Test: LDA 
-
-; hello
