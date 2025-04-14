@@ -19,7 +19,7 @@ const MemoryViewer: React.FC<MemoryViewerProps> = ({
   const displayRow = function (offset: number, size: number) {
     const displays = [];
 
-    for (let i = offset; i < offset + size; i++) {
+    for (let i = offset + size - 1; i >= offset; i--) {
       displays.push(
         <BitDisplay getBitValue={() => readMemory(i) > 0} />
       );
@@ -35,19 +35,19 @@ const MemoryViewer: React.FC<MemoryViewerProps> = ({
   const toggleRow = function() {
     const toggles = [];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 6; i >= 0; i--) {
       toggles.push(
-        <ToggleSwitch onChange={(enabled) => setToggle(i, enabled)} />
+        <ToggleSwitch onChange={(enabled) => setToggle(6 - i, enabled)} />
       );
     }
 
     return (
       <div className="flex w-full flex-row justify-center gap-3">
+        {toggles}
         <div className="flex flex-col">
           <BitDisplay getBitValue={() => resultRegister.value > 0} />
           <div className="font-bold font-mono">RR</div>
         </div>
-        {toggles}
       </div>
     );
   }
