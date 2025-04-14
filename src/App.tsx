@@ -11,11 +11,13 @@ import MemoryViewer from './components/MemoryViewer';
 import AssembleErrorOutput from './components/AssembleErrorOutput';
 import EditorToolbar from './components/EditorToolbar';
 import testExample from './examples/MemoryTest.txt?raw';
+import fibonacciExample from './examples/Fibonacci.txt?raw';
 import GitHubLogo from './assets/github-mark-white.svg';
 
 const emulator = new Emulator();
 const examplePrograms: { label: string; code: string }[] = [
   { label: "Example: Memory Test", code: testExample },
+  { label: "Example: Fibonacci", code: fibonacciExample },
 ];
 
 function App() {
