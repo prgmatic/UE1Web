@@ -37,7 +37,7 @@ const MemoryViewer: React.FC<MemoryViewerProps> = ({
 
     for (let i = 6; i >= 0; i--) {
       toggles.push(
-        <ToggleSwitch onChange={(enabled) => setToggle(6 - i, enabled)} />
+        <ToggleSwitch onChange={(enabled) => setToggle(i, enabled)} />
       );
     }
 

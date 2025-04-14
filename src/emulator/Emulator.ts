@@ -27,6 +27,7 @@ export class Emulator {
     private _isAssembled: boolean = false;
     private _code: string | null = null;
     private _error: string = "";
+    private programLength = 0;
 
     constructor() {
         this.stepper = new Stepper(this.onStepped.bind(this));
@@ -78,7 +79,7 @@ export class Emulator {
 
 
     private onStepped(): boolean {
-        this._computer.step();
+        this._computer.step(this.programLength);
 
         if (this.didHitBreakpoint() || this.shouldHalt()) {
             this.stepper.pause();
@@ -102,6 +103,7 @@ export class Emulator {
         if (this._code == null)
             return false;
         const result = this.assembler.assemble(this._code, this.computer.memory.program, this.addressSpans);
+        console.log(this.addressSpans);
         this._isAssembled = result.success;
         this._error = result.error;
 
@@ -111,7 +113,7 @@ export class Emulator {
         }
         this.computer.registers.programCounter.value = result.startAddress;
         this.computer.registers.programCounter.latch();
-
+        this.programLength = Object.keys(this.addressSpans).length;
         return true;
     }
 }

@@ -64,9 +64,6 @@ export class UE1Ram implements MemoryInterface {
         for (let i = 0; i < this.data.length; i++) {
             this.data[i] = 0;
         }
-        for (let i = 0; i < this.toggles.length; i++) {
-            this.toggles[i] = 0;
-        }
         this.pendingWrites.length = 0; 
     }
 }

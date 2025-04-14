@@ -12,12 +12,14 @@ import AssembleErrorOutput from './components/AssembleErrorOutput';
 import EditorToolbar from './components/EditorToolbar';
 import testExample from './examples/MemoryTest.txt?raw';
 import fibonacciExample from './examples/Fibonacci.txt?raw';
+import additionExample from './examples/Addition.txt?raw';
 import GitHubLogo from './assets/github-mark-white.svg';
 
 const emulator = new Emulator();
 const examplePrograms: { label: string; code: string }[] = [
   { label: "Example: Memory Test", code: testExample },
   { label: "Example: Fibonacci", code: fibonacciExample },
+  { label: "Example: Addition", code: additionExample },
 ];
 
 function App() {

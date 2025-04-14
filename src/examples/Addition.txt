@@ -1,0 +1,49 @@
+; UI1 Add 2 6 bit numbers
+; This progam will and the SR0-SR5 to IR1-IR6.
+; If IR7 is enabled, IR1-IR6 is copied into scratch.
+
+ONE  RR     ; Put 1 in RR and 0 in CR
+IEN  RR     ; Enable Input reading
+STOC SR7    ; Store a 0 into SR7. Needed later when trying to get the carry bit.
+
+; If IR7 is enabled
+; Copy IR1-IR6 into SR0-SR5
+LD   IR7
+OEN
+LD   IR1
+STO  SR0
+LD   IR2
+STO  SR1
+LD   IR3
+STO  SR2
+LD   IR4
+STO  SR3
+LD   IR5
+STO  SR4
+LD   IR6
+STO  SR5
+
+; Add IR1-IR6 and SR0-SR5
+ONE  RR
+OEN  RR     ; Enable output Register
+LD   SR0
+ADD  IR1
+STO  OR0
+LD   SR1
+ADD  IR2
+STO  OR1
+LD   SR2
+ADD  IR3
+STO  OR2
+LD   SR3
+ADD  IR4
+STO  OR3
+LD   SR4
+ADD  IR5
+STO  OR4
+LD   SR5
+ADD  IR6
+STO  OR5
+LD   SR7      ; Load 0 and add zero to put carry into RR
+ADD  SR7
+STO  OR6     ; Store the carry bit into OR6

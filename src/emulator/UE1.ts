@@ -9,7 +9,7 @@ export class UE1 {
     public registers: Registers = new Registers();
     public memory: UE1Memory = new UE1Memory(this.registers.result);
 
-    public step(): void{
+    public step(programLength: number): void{
         this.registers.programCounter.latch();
 
         const skipNextInstruction = this.shouldSkipNextInstruction();
@@ -20,7 +20,12 @@ export class UE1 {
             this.executeInstruction(instruction);
         }
         
-        this.registers.programCounter.value += 1;
+        // Loop around to address 0 if reached end of program
+        let pc = this.registers.programCounter.value;
+        pc += 1;
+        if(pc >= programLength)
+            pc = 0;
+        this.registers.programCounter.value = pc;
     }
 
     public executeInstruction(instruction: number) {
