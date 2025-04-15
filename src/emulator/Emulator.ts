@@ -103,7 +103,6 @@ export class Emulator {
         if (this._code == null)
             return false;
         const result = this.assembler.assemble(this._code, this.computer.memory.program, this.addressSpans);
-        console.log(this.addressSpans);
         this._isAssembled = result.success;
         this._error = result.error;
 

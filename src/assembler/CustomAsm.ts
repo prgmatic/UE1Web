@@ -35,7 +35,7 @@ export class CustomAsm {
         }
 
         const asmPtr = makeRustString(this.exports, code);
-        const formatPtr = makeRustString(this.exports, "annotated,base:2,group:15");
+        const formatPtr = makeRustString(this.exports, "annotated,base:2,group:8");
         const spanFormatPtr = makeRustString(this.exports, "addrspan");
 
 
@@ -58,7 +58,6 @@ export class CustomAsm {
             throw e;
         }
 
-
         const output = readRustString(this.exports, outputPtr);
         const addressSpansString = readRustString(this.exports, spanPtr);
 
@@ -71,16 +70,6 @@ export class CustomAsm {
             return { success: false, error: output, startAddress: startAddress };
         }
 
-        output.split(/\r?\n/).forEach((line: string) => {
-            const data = AssemblyParser.parseAssembledLine(line);
-            if (data != null) {
-                data.values.forEach((value, index) => {
-                    memory.directWrite(data.address + index, value);
-                });
-            }
-        })
-
-
         for (const key in addressSpans)
             delete addressSpans[key];
 
@@ -88,6 +77,22 @@ export class CustomAsm {
             const data = AssemblyParser.parseAddressSpan(line, headerLineCount - 1);
             if (data != null)
                 addressSpans[data.address] = data;
+        })
+
+        let currentAddressSpan = addressSpans[0];
+
+        output.split(/\r?\n/).forEach((line: string) => {
+            const data = AssemblyParser.parseAssembledLine(line);
+            if (data != null) {
+                data.values.forEach((value, index) => {
+                    const addr = data.address + index;
+                    memory.directWrite(addr, value);
+                    if(addressSpans[addr] == null)
+                        addressSpans[addr] = currentAddressSpan;
+                    else
+                        currentAddressSpan = addressSpans[addr]
+                });
+            }
         })
 
         return { success: true, error: "", startAddress: startAddress };
@@ -104,7 +109,6 @@ export class CustomAsm {
                 ? parseInt(valueRaw, 16)
                 : parseInt(valueRaw, 10);
 
-            console.log('Parsed Start Address:', address); 
             code = code.replace(regex, '');
             return { success: true, modifiedCode: code, address: address };
         } 
