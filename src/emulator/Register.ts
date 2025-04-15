@@ -23,6 +23,6 @@ export class Register {
 
     public setAndLatch(value: number) {
         this.value = value;
-        this.unlatchedValue = value;
+        this.latch();
     }
 }

@@ -50,6 +50,5 @@ export class Registers {
         this.oFlag.setAndLatch(0);
         this.fFlag.setAndLatch(0);
         this.programCounter.setAndLatch(0);
-        this.latch();
     }
 }

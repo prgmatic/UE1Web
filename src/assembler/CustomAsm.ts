@@ -29,7 +29,6 @@ export class CustomAsm {
         const startAddressResult = this.extractStartAddress(code);
         let startAddress = 0;
         if(startAddressResult.success) {
-            console.log("cool");
             code = startAddressResult.modifiedCode!;
             code = this.setCodeStartAddress(code, startAddressResult.address!);
             startAddress = startAddressResult.address!;
@@ -67,8 +66,6 @@ export class CustomAsm {
         dropRustString(this.exports, formatPtr);
         dropRustString(this.exports, outputPtr);
         dropRustString(this.exports, spanPtr);
-
-        
 
         if (output.trimStart().startsWith("\u001b[90m\u001b[1m\u001b[91merror:")) {
             return { success: false, error: output, startAddress: startAddress };
