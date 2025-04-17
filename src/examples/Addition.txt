@@ -2,14 +2,14 @@
 ; This progam will and the SR0-SR5 to IR1-IR6.
 ; If IR7 is enabled, IR1-IR6 is copied into scratch.
 
-ONE  RR     ; Put 1 in RR and 0 in CR
+ONE  SR0    ; Put 1 in RR and 0 in CR
 IEN  RR     ; Enable Input reading
 STOC SR7    ; Store a 0 into SR7. Needed later when trying to get the carry bit.
 
 ; If IR7 is enabled
 ; Copy IR1-IR6 into SR0-SR5
 LD   IR7
-OEN
+OEN  RR
 LD   IR1
 STO  SR0
 LD   IR2
@@ -24,7 +24,7 @@ LD   IR6
 STO  SR5
 
 ; Add IR1-IR6 and SR0-SR5
-ONE  RR
+ONE  SR0
 OEN  RR     ; Enable output Register
 LD   SR0
 ADD  IR1

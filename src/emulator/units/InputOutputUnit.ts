@@ -4,7 +4,7 @@ import { MemoryInterface } from "../memory/MemoryInterface";
 import { Registers } from "../Registers";
 
 export class InputOutputUnit {
-    public static executeInstruction(instruction: DecodedInstruction, registers: Registers, memoryInterface: MemoryInterface) {
+    public static executeInstruction(instruction: DecodedInstruction, registers: Registers, dataIn: number, memoryInterface: MemoryInterface) {
         switch(instruction.opcode) {
             case opcode.load: {
                 if(registers.inputEnable.value > 0) 
@@ -23,12 +23,12 @@ export class InputOutputUnit {
             }
 
             case opcode.inputEnable: {
-                registers.inputEnable.value = registers.result.value;
+                registers.inputEnable.value = dataIn;
                 break;
             }
 
             case opcode.outputEnable: {
-                registers.outputEnable.value = registers.result.value;
+                registers.outputEnable.value = dataIn;
                 break;
             }
         }

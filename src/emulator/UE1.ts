@@ -34,7 +34,7 @@ export class UE1 {
 
         ArithmeticLogicUnit.executeInstruction(decodedInstruction, this.registers, dataIn);
         ControlUnit.executeInstruction(decodedInstruction, this.registers);
-        InputOutputUnit.executeInstruction(decodedInstruction, this.registers, this.memory.randomAccess);
+        InputOutputUnit.executeInstruction(decodedInstruction, this.registers, dataIn, this.memory.randomAccess);
 
         this.registers.latchAllButProgramCounter();
         this.memory.latch();
