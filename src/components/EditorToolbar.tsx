@@ -3,12 +3,14 @@ import React, { useRef } from 'react';
 interface EditorToolbarProps {
   onLoad: (code: string) => void;
   getCode: () => string;
+  assembleIntoBinary: () => { success: boolean, error: string, data: Uint8Array | null }
   examples: { label: string; code: string }[];
 }
 
 const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onLoad,
   getCode,
+  assembleIntoBinary,
   examples,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +66,37 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
     }
   };
 
+  const handleBinaryExport = async() => {
+    const result = assembleIntoBinary();
+
+    if(result.data == null)
+      return;
+
+    // Try native file save dialog (File System Access API)
+    if ('showSaveFilePicker' in window) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const handle = await (window as any).showSaveFilePicker({
+          types: [
+            {
+              description: 'Binary',
+              accept: { 'application/octet-stream': ['.bin'] },
+            },
+          ],
+        });
+
+        console.log("data len", result.data.length);
+        
+        const writable = await handle.createWritable();
+        await writable.write(result.data);
+        await writable.close();
+        return;
+      } catch (err) {
+        console.error('Save cancelled or failed:', err);
+      }
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 px-4 py-2">
       {/* Drop down */}
@@ -93,6 +126,12 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
         onClick={handleSave}
         className="px-3 py-1 bg-blue-800 hover:bg-blue-900 text-white rounded">
         Save
+      </button>
+     {/* Save Button */}
+     <button
+        onClick={handleBinaryExport}
+        className="px-3 py-1 bg-blue-800 hover:bg-blue-900 text-white rounded">
+        Export as Binary
       </button>
     </div>
   );

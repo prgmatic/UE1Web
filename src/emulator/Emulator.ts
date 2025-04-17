@@ -77,6 +77,15 @@ export class Emulator {
         this.stepper.onUpdateEvent(callback);
     };
 
+    public assembleIntoBinary() {
+        if (this._code == null)
+            return { success: false, error: "", data: null  };
+        const result = this.assembler.assembleIntoBinary(this._code);
+        this._error = result.error;
+        this.stop();
+        return result;
+    }
+
 
     private onStepped(): boolean {
         this._computer.step(this.programLength);

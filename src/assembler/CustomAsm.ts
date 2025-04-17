@@ -98,6 +98,50 @@ export class CustomAsm {
         return { success: true, error: "", startAddress: startAddress };
     }
 
+    public assembleIntoBinary(code: string) : { success: boolean, error: string, data: Uint8Array | null} {
+        const asmPtr = makeRustString(this.exports, header + code);
+        const formatPtr = makeRustString(this.exports, "hexstr");
+
+        console.log(code);
+
+        let outputPtr = null
+        try {
+            outputPtr = this.exports.wasm_assemble(formatPtr, asmPtr);
+        }
+        catch (e) {
+            alert("Error assembling!\n\n" + e);
+            throw e;
+        }
+
+        const outputStr = readRustString(this.exports, outputPtr);
+
+
+        dropRustString(this.exports, asmPtr);
+        dropRustString(this.exports, formatPtr);
+        dropRustString(this.exports, outputPtr);
+
+        if (outputStr.trimStart().startsWith("\u001b[90m\u001b[1m\u001b[91merror:")) {
+            return { success: false, error: outputStr, data: null };
+        }
+
+        if(outputStr.length % 2 != 0) {
+            return { success: false, error: "Something went very wrong :O", data: null };
+        }
+
+        console.log(outputStr);
+
+        const byteCount = outputStr.length / 2;
+        const data = new Uint8Array(byteCount);
+        for (let i = 0; i < byteCount; i++) {
+            data[i] = parseInt(outputStr.substring(i * 2, i * 2 + 2), 16);
+            console.log(outputStr.substring(i * 2, i * 2 + 2));
+            
+        }
+        console.log(data);
+        
+        return { success: true, error: "", data: data };
+    }
+
     private extractStartAddress(code: string): { success: boolean, modifiedCode?: string, address?: number } {
         const regex = /^#start_address[ \t]+(0x[0-9a-fA-F]+|\d+)/m;
         const match = code.match(regex);
