@@ -102,8 +102,6 @@ export class CustomAsm {
         const asmPtr = makeRustString(this.exports, header + code);
         const formatPtr = makeRustString(this.exports, "hexstr");
 
-        console.log(code);
-
         let outputPtr = null
         try {
             outputPtr = this.exports.wasm_assemble(formatPtr, asmPtr);
@@ -128,16 +126,12 @@ export class CustomAsm {
             return { success: false, error: "Something went very wrong :O", data: null };
         }
 
-        console.log(outputStr);
-
         const byteCount = outputStr.length / 2;
         const data = new Uint8Array(byteCount);
         for (let i = 0; i < byteCount; i++) {
             data[i] = parseInt(outputStr.substring(i * 2, i * 2 + 2), 16);
-            console.log(outputStr.substring(i * 2, i * 2 + 2));
             
         }
-        console.log(data);
         
         return { success: true, error: "", data: data };
     }

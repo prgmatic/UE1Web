@@ -85,8 +85,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           ],
         });
 
-        console.log("data len", result.data.length);
-        
         const writable = await handle.createWritable();
         await writable.write(result.data);
         await writable.close();
