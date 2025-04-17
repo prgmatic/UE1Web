@@ -17,9 +17,9 @@ export class ArithmeticLogicUnit {
             }
             case opcode.sub: {
                 const carryIn = registers.carry.value;
-                const addResult = this.fullSubtractor(1, registers.result.value, dataIn, carryIn);
-                registers.result.value = addResult.difference;
-                registers.carry.value = addResult.borrowOut;
+                const subResult = this.ue1Subtract(registers.result.value, dataIn, carryIn);
+                registers.result.value = subResult.result;
+                registers.carry.value = subResult.carryOut;
                 break;
             }
             case opcode.one: {
@@ -61,4 +61,16 @@ export class ArithmeticLogicUnit {
     
         return { difference: difference, borrowOut };
     }
+
+    public static ue1Subtract(a: number, b: number, carryIn: number): { result: number, carryOut: number } {
+        b = ~b & 1;
+        const add = a + b + carryIn;
+        console.log(a, b, carryIn, add);
+        
+        return {
+            result: (add & 0b01) > 0 ? 1 : 0,
+            carryOut: (add & 0b10) > 0 ? 1 : 0
+        }
+    }
+
 }
